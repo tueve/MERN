@@ -4,7 +4,8 @@
 
 RSK comes with the following libraries for testing purposes:
 
-* [Jest](https://facebook.github.io/jest/) - JavaScript testing library
+* [Mocha](https://mochajs.org/) - Node.js and browser test runner
+* [Chai](http://chaijs.com/) - Assertion library
 * [Enzyme](https://github.com/airbnb/enzyme) - Testing utilities for React
 
 You may also want to take a look at the following related packages:
@@ -15,10 +16,11 @@ You may also want to take a look at the following related packages:
 ### Running tests
 
 To test your application simply run the
-[`yarn test`](https://github.com/kriasoft/react-starter-kit/blob/9014614edcb2f44b23298ca3287b9af3a14b6076/package.json#L152)
+[`yarn test`](https://github.com/kriasoft/react-starter-kit/blob/b22b1810461cec9c53eedffe632a3ce70a6b29a3/package.json#L154)
 command which will:
 
 * recursively find all files ending with `.test.js` in your `src/` directory
+* mocha execute found files
 
 ```bash
 yarn test
@@ -39,23 +41,22 @@ you can use as a starting point:
 
 ```js
 import React from 'react';
-import renderer from 'react-test-renderer';
+import { expect } from 'chai';
+import { shallow } from 'enzyme';
 import App from '../App';
 import Layout from './Layout';
 
 describe('Layout', () => {
-  test('renders children correctly', () => {
-    const wrapper = renderer
-      .create(
-        <App context={{ insertCss: () => {}, fetch: () => {}, pathname: '' }}>
-          <Layout>
-            <div className="child" />
-          </Layout>
-        </App>,
-      )
-      .toJSON();
+  it('renders children correctly', () => {
+    const wrapper = shallow(
+      <App context={{ insertCss: () => {} }}>
+        <Layout>
+          <div className="child" />
+        </Layout>
+      </App>,
+    );
 
-    expect(wrapper).toMatchSnapshot();
+    expect(wrapper.contains(<div className="child" />)).to.be.true;
   });
 });
 ```
